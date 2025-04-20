@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>인스타 맞팔 분석기</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    textarea { width: 100%; height: 150px; margin-bottom: 10px; }
+    button { padding: 10px 20px; font-size: 16px; }
+    .result { margin-top: 20px; }
+    ul { padding-left: 20px; }
+  </style>
+</head>
+<body>
+
+  <h1>📱 인스타 맞팔 분석기</h1>
+
+  <p>👇 인스타그램 앱에서 복사한 <strong>팔로잉 목록</strong>을 붙여넣으세요:</p>
+  <textarea id="following" placeholder="여기에 팔로잉 목록을 붙여넣기"></textarea>
+
+  <p>👇 인스타그램 앱에서 복사한 <strong>팔로워 목록</strong>을 붙여넣으세요:</p>
+  <textarea id="followers" placeholder="여기에 팔로워 목록을 붙여넣기"></textarea>
+
+  <button onclick="analyze()">비교하기</button>
+
+  <div class="result" id="result"></div>
+
+  <script>
+    function analyze() {
+      const followingText = document.getElementById('following').value;
+      const followersText = document.getElementById('followers').value;
+
+      const following = followingText.split('\n').map(name => name.trim()).filter(Boolean);
+      const followers = followersText.split('\n').map(name => name.trim()).filter(Boolean);
+
+      const mutual = following.filter(f => followers.includes(f));
+      const onlyFollowing = following.filter(f => !followers.includes(f));
+      const onlyFollowers = followers.filter(f => !following.includes(f));
+
+      const resultDiv = document.getElementById('result');
+      resultDiv.innerHTML = `
+        <h2>🔁 맞팔: ${mutual.length}명</h2>
+        <ul>${mutual.map(name => `<li>${name}</li>`).join('')}</ul>
+
+        <h2>👤 나만 팔로우 중: ${onlyFollowing.length}명</h2>
+        <ul>${onlyFollowing.map(name => `<li>${name}</li>`).join('')}</ul>
+
+        <h2>🙋‍♀️ 나만 팔로워: ${onlyFollowers.length}명</h2>
+        <ul>${onlyFollowers.map(name => `<li>${name}</li>`).join('')}</ul>
+      `;
+    }
+  </script>
+</body>
+</html>
